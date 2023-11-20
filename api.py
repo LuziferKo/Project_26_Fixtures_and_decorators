@@ -17,6 +17,7 @@ file_handler.setFormatter(formatter)
 # Добавляем обработчик к логгеру
 logger.addHandler(file_handler)
 
+
 def log_requests(func):
     def wrapper(*args, **kwargs):
         # Логируем запрос
@@ -64,9 +65,9 @@ class PetFriends:
         return status, result
 
     @log_requests
-    def create_pet_simple(self, auth_key, name: str, animal_type: str, age: int) -> json:
-        """Метод отправляет на сервер данные о добавлении питомца (без фото) и возвращает статус
-        запроса на сервер и результат в формате json о добавленном питомце"""
+    def add_new_pet_simple(self, auth_key: json, name: str, animal_type: str, age: str) -> json:
+        """Метод отправляет на сервер данные о добавляемом питомце и возвращает статус запроса и результат
+        в формате JSON с данными добавленного питомца"""
 
         data = MultipartEncoder(
             fields={
@@ -78,12 +79,12 @@ class PetFriends:
 
         res = requests.post(self.base_url + 'api/create_pet_simple', headers=headers, data=data)
         status = res.status_code
-        result = ""
-
+        result = ''
         try:
             result = res.json()
         except json.decoder.JSONDecodeError:
             result = res.text
+        print(result)
         return status, result
 
     @log_requests
